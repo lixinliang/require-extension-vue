@@ -1,0 +1,34 @@
+{
+  "name": "require-extension-vue",
+  "version": "0.0.1",
+  "description": "Require extension for '.vue' file.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jshint index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lixinliang/require-extension-vue.git"
+  },
+  "keywords": [
+    "require",
+    "extension",
+    "vue",
+    "hook",
+    "register",
+    "loader",
+    "atom"
+  ],
+  "author": {
+    "name": "lixinliang",
+    "url": "https://github.com/lixinliang"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "strip-bom": "^3.0.0",
+    "vue-template-compiler": "^2.2.6"
+  },
+  "devDependencies": {
+    "jshint": "^2.9.4"
+  }
+}
