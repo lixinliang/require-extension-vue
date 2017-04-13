@@ -5,6 +5,8 @@
 [![bitHound Code](https://www.bithound.io/github/lixinliang/require-extension-vue/badges/code.svg)](https://www.bithound.io/github/lixinliang/require-extension-vue)
 
 # require-extension-vue
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/lixinliang/require-extension-vue.svg)](https://greenkeeper.io/)
 > Require extension for `.vue` file.
 
 ## Todo
