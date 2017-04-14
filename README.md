@@ -5,7 +5,7 @@
 [![bitHound Code](https://www.bithound.io/github/lixinliang/require-extension-vue/badges/code.svg)](https://www.bithound.io/github/lixinliang/require-extension-vue)
 
 # require-extension-vue
-> Require extension for `.vue` file.
+> A require hook for loading single-file vue component.
 
 ## Todo
 
