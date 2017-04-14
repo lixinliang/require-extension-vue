@@ -1,7 +1,7 @@
 {
   "name": "require-extension-vue",
-  "version": "0.0.1",
-  "description": "Require extension for '.vue' file.",
+  "version": "1.0.0",
+  "description": "A require hook for loading single-file vue component.",
   "main": "index.js",
   "scripts": {
     "test": "jshint index.js"
