@@ -4,12 +4,20 @@ const fs = require('fs');
 const stripBom = require('strip-bom');
 const compiler = require('vue-template-compiler');
 
+/**
+ * In Browser Environment
+ * @type {Boolean} browserEnv
+ */
 let browserEnv = false;
 try {
     document;
     browserEnv = true;
 } catch (e) {}
 
+/**
+ * Save Loaders of different Language
+ * @type {Object} store
+ */
 let store = {
     style : {
         defaults : '',
@@ -25,6 +33,47 @@ let store = {
     },
 };
 
+/**
+ * Set default Loader
+ * @param {String} type | style | script | template |
+ * @param {String} lang scss, ts, jade etc.
+ */
+function set ( type, lang ) {
+    store[type].defaults = lang;
+}
+
+/**
+ * Register Loader
+ * @param {String} type | style | script | template |
+ * @param {String} lang scss, ts, jade etc.
+ * @param {Function} handler handler
+ */
+function register ( type, lang, handler ) {
+    store[type].langs[lang] = handler;
+}
+
+/**
+ * Exports API to expand
+ */
+['style', 'script', 'template'].forEach(( type ) => {
+    exports[type] = {
+        set ( lang ) {
+            set(type, lang);
+            return this;
+        },
+        register ( lang, handler ) {
+            register(type, lang, handler);
+            return this;
+        },
+    };
+});
+
+/**
+ * Require extension vue hook
+ * @param {Module} module module
+ * @param {String} filePath file path
+ * @export {Vue} Vue Component after compile
+ */
 require.extensions['.vue'] = require.extensions['.vue'] || function ( module, filePath ) {
 
     let content = fs.readFileSync(filePath, 'utf8');
@@ -48,6 +97,9 @@ require.extensions['.vue'] = require.extensions['.vue'] || function ( module, fi
             switch (type) {
                 case 'style':
                     if (browserEnv) {
+                        /**
+                         * Only in Browser Environment, append style to head
+                         */
                         let style = document.createElement('style');
                         style.innerHTML = content;
                         document.head.appendChild(style);
@@ -62,26 +114,6 @@ require.extensions['.vue'] = require.extensions['.vue'] || function ( module, fi
             }
         }
     });
+
     module.exports.template = vueTemplate;
 };
-
-function set ( type, lang ) {
-    store[type].defaults = lang;
-}
-
-function register ( type, lang, handler ) {
-    store[type].langs[lang] = handler;
-}
-
-['style', 'script', 'template'].forEach(( type ) => {
-    exports[type] = {
-        set ( lang ) {
-            set(type, lang);
-            return this;
-        },
-        register ( lang, handler ) {
-            register(type, lang, handler);
-            return this;
-        },
-    };
-});
