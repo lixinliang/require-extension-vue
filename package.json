@@ -1,7 +1,7 @@
 {
   "name": "require-extension-vue",
   "version": "1.0.0",
-  "description": "A require hook for loading single-file vue component.",
+  "description": "A require hook for loading single-file vue component in Node with Browser environment.",
   "main": "index.js",
   "scripts": {
     "test": "jshint index.js"
@@ -17,7 +17,8 @@
     "hook",
     "register",
     "loader",
-    "atom"
+    "atom",
+    "electron"
   ],
   "author": {
     "name": "lixinliang",
