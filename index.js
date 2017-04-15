@@ -34,7 +34,7 @@ let store = {
 };
 
 /**
- * Set default Loader
+ * Set default Loader of different Language
  * @param {String} type | style | script | template |
  * @param {String} lang scss, ts, jade etc.
  */
@@ -43,7 +43,7 @@ function set ( type, lang ) {
 }
 
 /**
- * Register Loader
+ * Register Loader of different Language
  * @param {String} type | style | script | template |
  * @param {String} lang scss, ts, jade etc.
  * @param {Function} handler handler
@@ -53,28 +53,12 @@ function register ( type, lang, handler ) {
 }
 
 /**
- * Exports API to expand
- */
-['style', 'script', 'template'].forEach(( type ) => {
-    exports[type] = {
-        set ( lang ) {
-            set(type, lang);
-            return this;
-        },
-        register ( lang, handler ) {
-            register(type, lang, handler);
-            return this;
-        },
-    };
-});
-
-/**
  * Require extension vue hook
  * @param {Module} module module
  * @param {String} filePath file path
  * @export {Vue} Vue Component after compile
  */
-require.extensions['.vue'] = require.extensions['.vue'] || function ( module, filePath ) {
+function loader ( module, filePath ) {
 
     let content = fs.readFileSync(filePath, 'utf8');
 
@@ -116,4 +100,30 @@ require.extensions['.vue'] = require.extensions['.vue'] || function ( module, fi
     });
 
     module.exports.template = vueTemplate;
-};
+}
+
+/**
+ * Exports API to expand
+ */
+['style', 'script', 'template'].forEach(( type ) => {
+    loader[type] = {
+        set ( lang ) {
+            set(type, lang);
+            return this;
+        },
+        register ( lang, handler ) {
+            register(type, lang, handler);
+            return this;
+        },
+    };
+});
+
+/**
+ * Register Loader as default .vue hook
+ */
+require.extensions['.vue'] = require.extensions['.vue'] || loader;
+
+/**
+ * @export {Function} loader
+ */
+module.exports = loader;
