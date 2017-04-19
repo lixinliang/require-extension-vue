@@ -1,8 +1,19 @@
 'use strict';
 
 const fs = require('fs');
+const css = require('css');
+const hash = require('hash-sum');
+const cssWhat = require('css-what');
 const stripBom = require('strip-bom');
 const compiler = require('vue-template-compiler');
+
+/**
+ * [stringify description]
+ * @type {Function} stringify
+ */
+const stringify = require('./css-what/stringify');
+window.stringify = stringify;
+window.cssWhat = cssWhat;
 
 /**
  * In Browser Environment
@@ -61,6 +72,7 @@ function register ( type, lang, handler ) {
 function loader ( module, filePath ) {
 
     let content = fs.readFileSync(filePath, 'utf8');
+    let moduleId = `_v-${ hash(filePath) }`;
 
     let vueTemplate = '';
     let vueComponent = compiler.parseComponent(stripBom(content));
@@ -68,6 +80,8 @@ function loader ( module, filePath ) {
     let script = vueComponent.script;
     let styles = vueComponent.styles;
     let template = vueComponent.template;
+
+    let scoped = styles.some(({ attrs }) => attrs.scoped);
 
     [].concat(script, template, styles).forEach(( tag ) => {
         if (tag) {
@@ -84,15 +98,75 @@ function loader ( module, filePath ) {
                         /**
                          * Only in Browser Environment, append style to head
                          */
-                        let style = document.createElement('style');
-                        style.innerHTML = content;
-                        document.head.appendChild(style);
+                        if (content instanceof Promise) {
+                            /**
+                             * Style support async
+                             */
+                            content.then(sync);
+                        } else {
+                            sync(content);
+                        }
+                        function sync ( content ) {
+                            if (tag.attrs.scoped) {
+                                let ast = css.parse(content);
+                                ast.stylesheet.rules.forEach(( rule ) => {
+                                    rule.selectors = rule.selectors.map(( selector ) => {
+                                        // TODO: 
+                                        console.log(selector);
+                                        let [ tokens ] = cssWhat(selector);
+                                        let index = tokens.length - 1;
+                                        tokens.some(({ type }) => {
+                                            index--;
+                                            if (type !== 'pseudo' && type !== 'pseudo-element') {
+                                                return true;
+                                            }
+                                        });
+                                        tokens.splice(index + 1, 0, {
+                                            value : '',
+                                            name : moduleId,
+                                            action : 'exists',
+                                            type : 'attribute',
+                                            ignoreCase : false,
+                                        });
+                                        let test = stringify([tokens]);
+                                        console.log(test);
+                                        // TODO:
+                                        return `${ selector }[${ moduleId }]`;
+                                    });
+                                });
+                                content = css.stringify(ast);
+                            }
+                            let style = document.createElement('style');
+                            style.innerHTML = content;
+                            document.head.appendChild(style);
+                        }
                     }
                     break;
                 case 'script':
                     module._compile(content, filePath);
                     break;
                 case 'template':
+                    if (browserEnv) {
+                        /**
+                         * Only in Browser Environment, set Attribute for each element
+                         */
+                        if (scoped) {
+                            let div = document.createElement('div');
+                            div.innerHTML = content;
+                            let root = div.firstElementChild;
+                            walk(root, ( element ) => {
+                                element.setAttribute(moduleId, '');
+                            });
+                            function walk ( element, handler ) {
+                                handler(element);
+                                let children = element.children || [];
+                                [].forEach.call(children, ( child ) => {
+                                    walk(child, handler);
+                                });
+                            }
+                            content = div.innerHTML;
+                        }
+                    }
                     vueTemplate = content;
                     break;
             }
