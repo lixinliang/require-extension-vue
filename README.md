@@ -154,7 +154,7 @@ loader.script.register('babel', handler).set('babel');
 
 ## Todo
 
-* `scroped` feature.
+* `scoped` feature.
 * `source map`.
 
 ## License
