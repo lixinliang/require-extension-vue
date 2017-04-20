@@ -1,3 +1,7 @@
+/**
+ * @fork https://github.com/fb55/css-what/blob/master/stringify.js
+ */
+
 var actionTypes = {
 	"equals": "",
 	"element": "~",
@@ -46,6 +50,13 @@ function stringifyToken(token){
         if(token.data === null) return ":" + escapeName(token.name);
         if(typeof token.data === "string") return ":" + escapeName(token.name) + "(" + token.data + ")";
         return ":" + escapeName(token.name) + "(" + stringify(token.data) + ")";
+    }
+
+	/**
+	 * @overwrite Type of pseudo-element
+	 */
+	if (token.type === 'pseudo-element') {
+        return '::' + escapeName(token.name);
     }
 }
 
