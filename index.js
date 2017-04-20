@@ -8,12 +8,10 @@ const stripBom = require('strip-bom');
 const compiler = require('vue-template-compiler');
 
 /**
- * [stringify description]
+ * @fork https://github.com/fb55/css-what/blob/master/stringify.js
  * @type {Function} stringify
  */
-const stringify = require('./css-what/stringify');
-window.stringify = stringify;
-window.cssWhat = cssWhat;
+cssWhat.stringify = require('./css-what/stringify');
 
 /**
  * In Browser Environment
@@ -111,27 +109,22 @@ function loader ( module, filePath ) {
                                 let ast = css.parse(content);
                                 ast.stylesheet.rules.forEach(( rule ) => {
                                     rule.selectors = rule.selectors.map(( selector ) => {
-                                        // TODO: 
-                                        console.log(selector);
-                                        let [ tokens ] = cssWhat(selector);
-                                        let index = tokens.length - 1;
-                                        tokens.some(({ type }) => {
-                                            index--;
+                                        let [ patterns ] = cssWhat(selector);
+                                        let index = patterns.length - 1;
+                                        for (; index >= 0; index--) {
+                                            let { type } = patterns[index];
                                             if (type !== 'pseudo' && type !== 'pseudo-element') {
-                                                return true;
+                                                break;
                                             }
-                                        });
-                                        tokens.splice(index + 1, 0, {
+                                        }
+                                        patterns.splice(index + 1, 0, {
                                             value : '',
                                             name : moduleId,
                                             action : 'exists',
                                             type : 'attribute',
                                             ignoreCase : false,
                                         });
-                                        let test = stringify([tokens]);
-                                        console.log(test);
-                                        // TODO:
-                                        return `${ selector }[${ moduleId }]`;
+                                        return stringify([patterns]);
                                     });
                                 });
                                 content = css.stringify(ast);
