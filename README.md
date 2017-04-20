@@ -12,7 +12,7 @@
 
 #### 1. Your project is running in Node with Browser environment. ([Electron](https://electron.atom.io/) etc.)
 
-#### 2. The expected feature you want:
+#### 2. The expected feature you want, like runtime:
 
 ```vue
 // app.vue
@@ -33,7 +33,7 @@ export default {
 import 'require-extension-vue';
 // From now on, you can import or require a single-file vue component.
 import app from './app.vue';
-// This object is what you export. (data, computed, created etc.)
+// This object is what you export. (include attributes: data, computed, created etc.)
 // <template> will be exported in app.template as String.
 // <style> will be appended to document.head, if you have Browser environment.
 ```
