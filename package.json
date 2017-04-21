@@ -1,6 +1,6 @@
 {
   "name": "require-extension-vue",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A require hook for loading single-file vue component in Node with Browser environment.",
   "main": "index.js",
   "scripts": {
@@ -26,6 +26,9 @@
   },
   "license": "MIT",
   "dependencies": {
+    "css": "^2.2.1",
+    "css-what": "^2.1.0",
+    "hash-sum": "^1.0.2",
     "strip-bom": "^3.0.0",
     "vue-template-compiler": "^2.2.6"
   },
