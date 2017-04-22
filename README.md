@@ -70,7 +70,7 @@ import loader from 'require-extension-vue';
 ```
 
 #### #loader.style.register
-> register language to compile style
+> Register language to compile style.
 
 ```js
 loader.style.register('scss', ( content, filePath ) => {
@@ -86,7 +86,7 @@ loader.style.register('scss', ( content, filePath ) => {
 ```
 
 #### #loader.style.set
-> set a default language
+> Set a default language.
 
 ```js
 loader.style.set('scss');
@@ -97,6 +97,18 @@ loader.style.set('scss');
     // No need to Declare lang="scss" any more
     // sass code
 </style>
+```
+
+#### #sync
+> Compile handler should return content sync.
+
+#### #async
+> Only `style` compiler supports `async`. [@see](https://github.com/lixinliang/require-extension-vue/blob/master/index.js#L99)
+
+```js
+loader.style.register('scss', async ( content, filePath ) => {
+    return await compile(content);
+});
 ```
 
 ## API
@@ -121,18 +133,19 @@ loader.script.register('babel', handler).set('babel');
 import app from './app.vue';
 ```
 
-That should be:
+The above case is equal to the following case:
 
 ```js
 import loader from 'require-extension-vue';
 import app from './app.vue';
-// Your config behavior is after require.
+// Your config behavior is after require, so it is not working.
 loader.script.register('babel', handler).set('babel');
 ```
 
 There're two way to avoid:
 
 > You can use `require` instead of `import`.
+
 ```js
 import loader from 'require-extension-vue';
 loader.script.register('babel', handler).set('babel');
@@ -140,6 +153,7 @@ let app  = require('./app.vue');
 ```
 
 > Put the config behavior in one file.
+
 ```js
 import 'require-extension-vue';
 import './require-extension-vue-config.js';
@@ -152,9 +166,20 @@ let loader = require.extensions['.vue'];
 loader.script.register('babel', handler).set('babel');
 ```
 
+## Scoped
+
+Support `scoped`, like `vue-loader`. [@see](https://github.com/vuejs/vue-loader/blob/master/docs/en/features/scoped-css.md)
+
+#### #Mind you
+
+This feature require `css-what`.
+
+But, it is `defective`. [@see](https://github.com/fb55/css-what/blob/master/stringify.js#L53)
+
+If your class name includes `#` (`>`, etc), it can not parse to correct `AST` selector.
+
 ## Todo
 
-* `scoped` feature.
 * `source map`.
 
 ## License
