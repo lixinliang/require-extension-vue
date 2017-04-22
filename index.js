@@ -124,7 +124,7 @@ function loader ( module, filePath ) {
                                             type : 'attribute',
                                             ignoreCase : false,
                                         });
-                                        return stringify([patterns]);
+                                        return cssWhat.stringify([patterns]);
                                     });
                                 });
                                 content = css.stringify(ast);
