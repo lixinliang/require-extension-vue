@@ -93,18 +93,7 @@ function loader ( module, filePath ) {
             switch (type) {
                 case 'style':
                     if (browserEnv) {
-                        /**
-                         * Only in Browser Environment, append style to head
-                         */
-                        if (content instanceof Promise) {
-                            /**
-                             * Style support async
-                             */
-                            content.then(sync);
-                        } else {
-                            sync(content);
-                        }
-                        function sync ( content ) {
+                        let sync = function sync ( content ) {
                             if (tag.attrs.scoped) {
                                 let ast = css.parse(content);
                                 ast.stylesheet.rules.forEach(( rule ) => {
@@ -132,6 +121,17 @@ function loader ( module, filePath ) {
                             let style = document.createElement('style');
                             style.innerHTML = content;
                             document.head.appendChild(style);
+                        };
+                        /**
+                         * Only in Browser Environment, append style to head
+                         */
+                        if (content instanceof Promise) {
+                            /**
+                             * Style support async
+                             */
+                            content.then(sync);
+                        } else {
+                            sync(content);
                         }
                     }
                     break;
@@ -147,16 +147,16 @@ function loader ( module, filePath ) {
                             let div = document.createElement('div');
                             div.innerHTML = content;
                             let root = div.firstElementChild;
-                            walk(root, ( element ) => {
-                                element.setAttribute(moduleId, '');
-                            });
-                            function walk ( element, handler ) {
+                            let walk = function walk ( element, handler ) {
                                 handler(element);
                                 let children = element.children || [];
                                 [].forEach.call(children, ( child ) => {
                                     walk(child, handler);
                                 });
-                            }
+                            };
+                            walk(root, ( element ) => {
+                                element.setAttribute(moduleId, '');
+                            });
                             content = div.innerHTML;
                         }
                     }
