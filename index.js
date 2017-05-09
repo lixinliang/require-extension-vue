@@ -31,6 +31,9 @@ let store = {
     style : {
         defaults : '',
         langs : {},
+        exports ( style ) {
+            document.head.appendChild(style);
+        },
     },
     script : {
         defaults : '',
@@ -81,14 +84,14 @@ function loader ( module, filePath ) {
 
     let scoped = styles.some(({ attrs }) => attrs.scoped);
 
-    [].concat(script, template, styles).forEach(( tag ) => {
+    [].concat(script, template, styles).forEach(( tag, index ) => {
         if (tag) {
             let type = tag.type;
             let content = tag.content;
             let lang = tag.attrs.lang || store[type].defaults;
             let handler = store[type].langs[lang];
             if (handler) {
-                content = handler(content, filePath);
+                content = handler(content, filePath, index);
             }
             switch (type) {
                 case 'style':
@@ -120,7 +123,11 @@ function loader ( module, filePath ) {
                             }
                             let style = document.createElement('style');
                             style.innerHTML = content;
-                            document.head.appendChild(style);
+                            store.style.exports.call(module.exports, style, {
+                                index,
+                                styles,
+                                filePath,
+                            });
                         };
                         /**
                          * Only in Browser Environment, append style to head
@@ -184,6 +191,14 @@ function loader ( module, filePath ) {
         },
     };
 });
+
+/**
+ * Handler of creating styles
+ * @param {Function} handler handler
+ */
+loader.style.exports = ( handler ) => {
+    store.style.exports = handler;
+};
 
 /**
  * Register Loader as default .vue hook
