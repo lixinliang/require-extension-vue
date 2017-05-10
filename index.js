@@ -198,6 +198,7 @@ function loader ( module, filePath ) {
  */
 loader.style.exports = ( handler ) => {
     store.style.exports = handler;
+    return this;
 };
 
 /**
