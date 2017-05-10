@@ -11,4 +11,8 @@
 
 ## 1.1.2
 * 💅 code style.
-* pass test.
+* Pass test.
+
+## 1.2.0
+* Handler of creating styles.
+* New additional arguments in handler for more information about the vue component.
