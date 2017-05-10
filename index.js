@@ -58,7 +58,7 @@ function set ( type, lang ) {
  * Register Loader of different Language
  * @param {String} type | style | script | template |
  * @param {String} lang scss, ts, jade etc.
- * @param {Function} handler handler
+ * @param {Function} handler
  */
 function register ( type, lang, handler ) {
     store[type].langs[lang] = handler;
@@ -66,7 +66,7 @@ function register ( type, lang, handler ) {
 
 /**
  * Require extension vue hook
- * @param {Module} module module
+ * @param {Module} module
  * @param {String} filePath file path
  * @export {Vue} Vue Component after compile
  */
@@ -194,7 +194,7 @@ function loader ( module, filePath ) {
 
 /**
  * Handler of creating styles
- * @param {Function} handler handler
+ * @param {Function} handler
  */
 loader.style.exports = ( handler ) => {
     store.style.exports = handler;
