@@ -73,7 +73,7 @@ import loader from 'require-extension-vue';
 > Register language to compile style.
 
 ```js
-loader.style.register('scss', ( content, filePath ) => {
+loader.style.register('scss', ( content, filePath, index ) => {
     // compile
     return content;
 });
@@ -99,14 +99,23 @@ loader.style.set('scss');
 </style>
 ```
 
-#### #sync
-> Compile handler should return content sync.
-
-#### #async
-> Only `style` compiler supports `async`. [@see](https://github.com/lixinliang/require-extension-vue/blob/master/index.js#L99)
+#### #loader.style.exports
+> Append styles to where you like.
 
 ```js
-loader.style.register('scss', async ( content, filePath ) => {
+loader.style.exports(function ( style, { index, styles, filePath } ) {
+    document.head.appendChild(style);
+});
+```
+
+#### #sync
+> Compile handler should return content sync, includes `<template>` and `<script>`.
+
+#### #async
+> Only `<style>` compiler supports `async`. [@see](https://github.com/lixinliang/require-extension-vue/blob/master/index.js#L135)
+
+```js
+loader.style.register('scss', async ( content, filePath, index ) => {
     return await compile(content);
 });
 ```
@@ -114,7 +123,9 @@ loader.style.register('scss', async ( content, filePath ) => {
 ## API
 
 #### #Register
-> ( content : String, filePath : String ) => this
+> ( lang : String, handler : Function ) => this
+
+> handler ( content : String, filePath : String, index : Number ) => content : String
 
 loader.style.register / loader.script.register / loader.template.register
 
@@ -122,6 +133,13 @@ loader.style.register / loader.script.register / loader.template.register
 > ( lang : String ) => this
 
 loader.style.set / loader.script.set / loader.template.set
+
+#### #Exports
+> ( handler : Function ) => this
+
+> handler ( style : Element, options : { index : Number, styles : [ ...style : Element ], filePath : String } )
+
+loader.style.exports
 
 ## Notice
 
