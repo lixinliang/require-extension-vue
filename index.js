@@ -96,50 +96,40 @@ function loader ( module, filePath ) {
             switch (type) {
                 case 'style':
                     if (browserEnv) {
-                        let sync = function sync ( content ) {
-                            if (tag.attrs.scoped) {
-                                let ast = css.parse(content);
-                                ast.stylesheet.rules.forEach(( rule ) => {
-                                    rule.selectors = rule.selectors.map(( selector ) => {
-                                        let [ patterns ] = cssWhat(selector);
-                                        let index = patterns.length - 1;
-                                        for (; index >= 0; index--) {
-                                            let { type } = patterns[index];
-                                            if (type !== 'pseudo' && type !== 'pseudo-element') {
-                                                break;
-                                            }
-                                        }
-                                        patterns.splice(index + 1, 0, {
-                                            value : '',
-                                            name : moduleId,
-                                            action : 'exists',
-                                            type : 'attribute',
-                                            ignoreCase : false,
-                                        });
-                                        return cssWhat.stringify([patterns]);
-                                    });
-                                });
-                                content = css.stringify(ast);
-                            }
-                            let style = document.createElement('style');
-                            style.innerHTML = content;
-                            store.style.exports.call(module.exports, style, {
-                                index,
-                                styles,
-                                filePath,
-                            });
-                        };
                         /**
                          * Only in Browser Environment, append style to head
                          */
-                        if (content instanceof Promise) {
-                            /**
-                             * Style support async
-                             */
-                            content.then(sync);
-                        } else {
-                            sync(content);
+                        if (tag.attrs.scoped) {
+                            let ast = css.parse(content);
+                            ast.stylesheet.rules.forEach(( rule ) => {
+                                rule.selectors = rule.selectors.map(( selector ) => {
+                                    let [ patterns ] = cssWhat(selector);
+                                    let index = patterns.length - 1;
+                                    for (; index >= 0; index--) {
+                                        let { type } = patterns[index];
+                                        if (type !== 'pseudo' && type !== 'pseudo-element') {
+                                            break;
+                                        }
+                                    }
+                                    patterns.splice(index + 1, 0, {
+                                        value : '',
+                                        name : moduleId,
+                                        action : 'exists',
+                                        type : 'attribute',
+                                        ignoreCase : false,
+                                    });
+                                    return cssWhat.stringify([patterns]);
+                                });
+                            });
+                            content = css.stringify(ast);
                         }
+                        let style = document.createElement('style');
+                        style.innerHTML = content;
+                        store.style.exports.call(module.exports, style, {
+                            index,
+                            styles,
+                            filePath,
+                        });
                     }
                     break;
                 case 'script':
