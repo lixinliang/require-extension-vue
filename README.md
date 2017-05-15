@@ -110,16 +110,10 @@ loader.style.exports(function ( style, { index, styles, filePath } ) {
 ```
 
 #### #sync
-> Compile handler should return content sync, includes `<template>` and `<script>`.
+> Compile handler should return content sync, includes `<template>`, `<script>` and `<style>`.
 
-#### #async
-> Only `<style>` compiler supports `async`. [@see](https://github.com/lixinliang/require-extension-vue/blob/master/index.js#L135)
-
-```js
-loader.style.register('scss', async ( content, filePath, index ) => {
-    return await compile(content);
-});
-```
+#### #<del>async<del>
+> Deprecated, [@see](https://github.com/lixinliang/require-extension-vue/issues/4)
 
 ## API
 
