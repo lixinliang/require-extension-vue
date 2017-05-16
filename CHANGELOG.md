@@ -16,3 +16,6 @@
 ## 1.2.0
 * Handler of creating styles.
 * New additional arguments in handler for more information about the vue component.
+
+## 1.3.0
+* Style do not support async any more.
