@@ -73,7 +73,7 @@ function register ( type, lang, handler ) {
 function loader ( module, filePath ) {
 
     let content = fs.readFileSync(filePath, 'utf8');
-    let moduleId = `_v-${ hash(filePath) }`;
+    let moduleId = `data-v-${ hash(filePath) }`;
 
     let vueTemplate = '';
     let vueComponent = compiler.parseComponent(stripBom(content));
