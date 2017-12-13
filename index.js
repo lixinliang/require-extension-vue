@@ -56,11 +56,15 @@ function set ( type, lang ) {
 
 /**
  * Register Loader of different Language
- * @param {String} type | style | script | template |
+ * @param {String | String[]} type | style | script | template |
  * @param {String} lang scss, ts, jade etc.
  * @param {Function} handler
  */
 function register ( type, lang, handler ) {
+    if (Array.isArray(lang)) {
+        lang.forEach((v) => store[type].langs[v] = handler);
+        return;
+    }
     store[type].langs[lang] = handler;
 }
 
@@ -91,7 +95,7 @@ function loader ( module, filePath ) {
             let lang = tag.attrs.lang || store[type].defaults;
             let handler = store[type].langs[lang];
             if (handler) {
-                content = handler(content, filePath, index);
+                content = handler(content, filePath, index, module);
             }
             switch (type) {
                 case 'style':
@@ -163,6 +167,7 @@ function loader ( module, filePath ) {
         }
     });
 
+    module.exports.vueComponent = vueComponent;
     module.exports.template = vueTemplate;
 }
 
