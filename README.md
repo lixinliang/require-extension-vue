@@ -1,10 +1,6 @@
 [![npm](https://img.shields.io/npm/l/require-extension-vue.svg)](https://www.npmjs.org/package/require-extension-vue)
 [![npm](https://img.shields.io/npm/v/require-extension-vue.svg)](https://www.npmjs.org/package/require-extension-vue)
 [![npm](https://img.shields.io/npm/dm/require-extension-vue.svg)](https://www.npmjs.org/package/require-extension-vue)
-[![Travis CI](https://img.shields.io/travis/lixinliang/require-extension-vue.svg)](https://travis-ci.org/lixinliang/mrequire-extension-vue)
-[![bitHound Code](https://www.bithound.io/github/lixinliang/require-extension-vue/badges/code.svg)](https://www.bithound.io/github/lixinliang/require-extension-vue)
-[![Greenkeeper badge](https://badges.greenkeeper.io/lixinliang/require-extension-vue.svg)](https://greenkeeper.io/)
-[![Twitter](https://img.shields.io/badge/twitter-@qq393464140-blue.svg)](http://twitter.com/qq393464140)
 
 # require-extension-vue
 > A require hook for loading single-file vue component in Node with Browser environment.
